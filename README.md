@@ -5,7 +5,7 @@ this is my personal website where i share my projects, blog posts, and more. bui
 
 ## Visit the Site
 
-Check it out here: [https://kiyosh11.github.io/kiyoshi/](https://kiyosh11.github.io/kiyoshi/)
+Check it out here: [https://kiyo.lol](https://kiyo.lol)
 
 ## Contact
 
