@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boobventure</title>
+    <style>
+        :root {
+            --neon-green: #00ff00;
+            --neon-pink: #ff69b4;
+            --neon-blue: #00ffff;
+            --bg-black: #000000;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: .99;
+                text-shadow: -1px -1px 0 var(--neon-green), 1px -1px 0 var(--neon-green), -1px 1px 0 var(--neon-green), 1px 1px 0 var(--neon-green), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4;
+                text-shadow: none;
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            font-size: clamp(2em, 5vw, 3.5em);
+            color: var(--neon-green);
+            text-align: center;
+            margin: 30px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: flicker 3s infinite;
+            text-shadow: 0 0 5px var(--neon-green),
+                         0 0 10px var(--neon-green),
+                         0 0 20px var(--neon-green);
+        }
+
+        .description {
+            font-size: clamp(1em, 3vw, 1.5em);
+            text-align: center;
+            margin: 20px 0;
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .social-proof {
+            height: 400px;
+            overflow-y: auto;
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .social-proof::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0, 255, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+        }
+
+        .tweet-embed {
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tweet-embed:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .crypto-wallets {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--neon-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .wallet:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: scale(1.02);
+            border-color: var(--neon-green);
+        }
+
+        .wallet::before {
+            content: '>';
+            color: var(--neon-green);
+            margin-right: 10px;
+            animation: blink 1s steps(1) infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .wallet-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        .wallet-address {
+            font-family: monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            color: var(--neon-green);
+        }
+
+        .progress-section {
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-section h2 {
+            font-size: clamp(1.5em, 3vw, 2em);
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink),
+                         0 0 10px var(--neon-pink);
+            animation: glitch 2s infinite;
+        }
+
+        .donors {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .donor {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donor::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 255, 0, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .donor:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+            border-color: var(--neon-green);
+        }
+
+        .donor a {
+            color: var(--neon-green);
+            text-decoration: none;
+            text-shadow: 0 0 3px var(--neon-green);
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+            font-size: 0.9em;
+            text-shadow: 0 0 2px #666;
+        }
+
+        .hacker-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 0, 0.03) 0px,
+                rgba(0, 255, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            animation: scan 8s linear infinite;
+        }
+
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .wallet-address {
+                max-width: 150px;
+            }
+            
+            .social-proof {
+                height: 300px;
+            }
+        }
+        
+        .tweet-embed img {
+        width: 100%;
+        max-width: 300px; 
+        height: auto;
+        border-radius: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div class="hacker-effects">
+        <div class="glitch-overlay"></div>
+        <canvas id="matrix-canvas" class="binary-rain"></canvas>
+    </div>
+
+    <div class="container">
+        <h1 class="header">boobventure: i will touch em</h1>
+        <div class="description">help me on my weird quest to touch seattle boobs</div>
+
+        <div class="social-proof">
+            <div class="tweet-embed">
+                <blockquote class="twitter-tweet">
+                    <image src="https://i.ibb.co/4t0Tqdh/Screenshot-20250101-190402-X.png"></a>
+                </blockquote>
+            </div>
+            <div class="tweet-embed">
+                <blockquote class="twitter-tweet">
+                    <image src="https://i.ibb.co/HDzp1hP/Screenshot-20250101-190804-X.png"></a>
+                </blockquote>
+            </div>
+            <div class="tweet-embed">
+                <blockquote class="twitter-tweet">
+                    <image src="https://i.ibb.co/R9c5SM2/Screenshot-20250101-190929-X.png"></a>
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="crypto-wallets">
+            <div class="wallet" onclick="copyToClipboard('btc-wallet')">
+                <span class="wallet-label">BTC:</span>
+                <span id="btc-wallet" class="wallet-address">bc1q7a3eevcs6xkmef79f3p376mr97t6pp6ygfta99</span>
+            </div>
+            <div class="wallet" onclick="copyToClipboard('eth-wallet')">
+                <span class="wallet-label">ETH:</span>
+                <span id="eth-wallet" class="wallet-address">0x93c0D091FeA122DF7CABCb73a0FDFBbb54121ccC</span>
+            </div>
+            
+            <div class="wallet" onclick="copyToClipboard('sol-wallet')">
+                <span class="wallet-label">SOL:</span>
+                <span id="sol-wallet" class="wallet-address">DbfX8ySgcYSVQwKypPjEo4zqgdoPUHBat7maEfcy8Rrz</span>
+            </div>
+            
+            <div class="wallet" onclick="copyToClipboard('pol-wallet')">
+                <span class="wallet-label">POLYGON:</span>
+                <span id="pol-wallet" class="wallet-address">0x93c0D091FeA122DF7CABCb73a0FDFBbb54121ccC</span>
+            </div>
+            
+            <div class="wallet" onclick="copyToClipboard('dm-wallet')">
+                <span class="wallet-label">OTHER?:</span>
+                <span id="dm-wallet" class="wallet-address">dm on X @_kiyosh1</span>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <h2>Goal: $5000</h2>
+        </div>
+
+        <div class="donors">
+            <span class="donor">
+                <a href="https://x.com/moneroon" target="_blank">moneroon: 16$</a>
+            </span>
+            <span class="donor">
+                <a href="https://x.com/MasterBest0" target="_blank">Master Humberto: $10+</a>
+            </span>
+            <span class="donor">
+                <a href="https://twitter.com/_kiyosh1" target="_blank">maybe you?: $?</a>
+            </span>           
+        </div>
+
+        <div class="footer">© 2025 kiyoshi</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん日本語';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.ceil(columns)).fill(1);
+
+        function createGradient(y) {
+            const gradient = ctx.createLinearGradient(0, y - fontSize, 0, y);
+            gradient.addColorStop(0, 'rgba(0, 255, 0, 0)');
+            gradient.addColorStop(0.8, 'rgba(0, 255, 0, 0.5)');
+            gradient.addColorStop(1, 'rgba(0, 255, 0, 1)');
+            return gradient;
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+
+                ctx.fillStyle = createGradient(y);
+                ctx.font = `${fontSize}px monospace`;
+                ctx.fillText(text, x, y);
+
+                if(y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            const wallet = document.getElementById(elementId).parentElement;
+            
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    wallet.style.backgroundColor = 'rgba(0, 255, 0, 0.3)';
+                    wallet.style.borderColor = 'var(--neon-green)';
+                    
+                    setTimeout(() => {
+                        wallet.style.backgroundColor = '';
+                        wallet.style.borderColor = 'rgba(0, 255, 0, 0.3)';
+                    }, 1000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy:', err);
+                    wallet.style.borderColor = 'red';
+                    setTimeout(() => {
+                        wallet.style.borderColor = 'rgba(0, 255, 0, 0.3)';
+                    }, 1000);
+                });
+        }
+
+        function updateLayout() {
+            const walletAddresses = document.querySelectorAll('.wallet-address');
+            const containerWidth = document.querySelector('.crypto-wallets').offsetWidth;
+            
+            walletAddresses.forEach(address => {
+                address.style.maxWidth = `${containerWidth - 120}px`;
+            });
+        }
+
+        window.addEventListener('resize', updateLayout);
+        window.addEventListener('load', updateLayout);
+    </script>
+</body>
+</html>
